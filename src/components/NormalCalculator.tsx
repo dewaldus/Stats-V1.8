@@ -137,46 +137,72 @@ export function NormalCalculator() {
           </motion.div>
         </div>
 
-        <div className="lg:col-span-8 flex flex-col gap-6">
-          <div className="flex-1 bg-white dark:bg-stone-900 p-8 rounded-[2.5rem] border border-stone-200 dark:border-stone-800 shadow-sm min-h-[500px] flex flex-col">
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-2 text-stone-400 dark:text-stone-500">
-                <BarChart3 className="w-4 h-4" />
-                <h3 className="text-xs font-black uppercase tracking-widest">Distribution Visualization</h3>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="lg:col-span-8 flex flex-col gap-6"
+          >
+            <div className="flex-1 bg-white dark:bg-stone-900 p-8 rounded-[2.5rem] border border-stone-200 dark:border-stone-800 shadow-sm min-h-[500px] flex flex-col">
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-2 text-stone-400 dark:text-stone-500">
+                  <BarChart3 className="w-4 h-4" />
+                  <h3 className="text-xs font-black uppercase tracking-widest">Distribution Visualization</h3>
+                </div>
+              </div>
+              <div className="flex-1">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={chartData} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
+                    <defs>
+                      <pattern id="dottedPattern" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+                        <circle cx="2" cy="2" r="1" fill="#6366f1" fillOpacity="0.15" />
+                      </pattern>
+                      <linearGradient id="colorY" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.2}/>
+                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                      </linearGradient>
+                      <linearGradient id="colorFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.9}/>
+                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0.5}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="1 5" stroke="#6366f1" strokeOpacity={0.2} vertical={false} />
+                    <XAxis dataKey="x" type="number" domain={['dataMin', 'dataMax']} tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }} axisLine={false} tickLine={false} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#1c1917', border: 'none', borderRadius: '12px', color: '#fff', fontSize: '12px' }}
+                      itemStyle={{ color: '#818cf8' }}
+                      formatter={(value: number) => value.toFixed(4)} 
+                      labelFormatter={(label: number) => `x = ${label}`} 
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="y" 
+                      stroke="#6366f1" 
+                      strokeOpacity={0.3}
+                      fill="url(#dottedPattern)" 
+                      strokeWidth={1} 
+                      animationDuration={1500}
+                      animationEasing="ease-in-out"
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="fillArea" 
+                      stroke="#6366f1" 
+                      strokeWidth={2}
+                      fill="url(#colorFill)" 
+                      animationDuration={1200}
+                      animationEasing="elastic-out"
+                      isAnimationActive={true}
+                    />
+                    {calcType === 'inverse' && result !== null && (
+                      <ReferenceLine x={result} stroke="#4f46e5" strokeDasharray="5 5" strokeWidth={2} />
+                    )}
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
             </div>
-            <div className="flex-1">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorY" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
-                    </linearGradient>
-                    <linearGradient id="colorFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0.4}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} className="dark:opacity-10" />
-                  <XAxis dataKey="x" type="number" domain={['dataMin', 'dataMax']} tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }} axisLine={false} tickLine={false} />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#1c1917', border: 'none', borderRadius: '12px', color: '#fff', fontSize: '12px' }}
-                    itemStyle={{ color: '#818cf8' }}
-                    formatter={(value: number) => value.toFixed(4)} 
-                    labelFormatter={(label: number) => `x = ${label}`} 
-                  />
-                  <Area type="monotone" dataKey="y" stroke="#6366f1" fill="url(#colorY)" strokeWidth={3} animationDuration={1000} />
-                  <Area type="monotone" dataKey="fillArea" stroke="none" fill="url(#colorFill)" animationDuration={1000} />
-                  {calcType === 'inverse' && result !== null && (
-                    <ReferenceLine x={result} stroke="#4f46e5" strokeDasharray="5 5" strokeWidth={2} />
-                  )}
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
+          </motion.div>
       </div>
     </div>
   );

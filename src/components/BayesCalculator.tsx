@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from 'react';
+import { Info, Calculator, RotateCcw, ArrowRight, Share2, Download, HelpCircle } from 'lucide-react';
+import { motion } from 'motion/react';
 
 const EPSILON = 1e-7;
 
@@ -159,7 +161,7 @@ export function BayesCalculator() {
     const num = parseFloat(value);
     setInputs(prev => ({
       ...prev,
-      [key]: !isNaN(num) && num >= 0 && num <= 1 ? num : null
+      [key]: !isNaN(num) && num >= 0 && num <= 100 ? num / 100 : null
     }));
   };
 
@@ -191,32 +193,43 @@ export function BayesCalculator() {
   };
 
   const renderInputRow = (key: ProbKeys) => (
-    <div key={key} className="flex items-center justify-between p-2 rounded bg-[#E8F0FE]">
-      <label className="text-sm font-medium text-[#0000FF] w-24">{getSymbol(key)}</label>
-      <input
-        type="number"
-        step="0.01"
-        min="0"
-        max="1"
-        value={inputStrings[key]}
-        onChange={e => handleInputChange(key, e.target.value)}
-        className="w-24 px-2 py-1 text-sm border border-blue-200 rounded text-[#0000FF] focus:outline-none focus:ring-2 focus:ring-blue-400"
-        placeholder="0.00"
-      />
+    <div key={key} className="flex flex-col gap-1.5 p-4 rounded-2xl bg-stone-50 dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700/50 transition-all hover:border-amber-500/50 group">
+      <div className="flex items-center justify-between">
+        <label className="text-[10px] font-black text-stone-400 dark:text-stone-500 uppercase tracking-widest">{getSymbol(key)}</label>
+        <div className="group/tooltip relative">
+          <Info className="w-3 h-3 text-stone-300 dark:text-stone-600 cursor-help" />
+          <div className="absolute bottom-full right-0 mb-2 w-40 p-2 bg-stone-900 text-white text-[9px] rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none z-50 shadow-xl">
+            {getDesc(key)}
+          </div>
+        </div>
+      </div>
+      <div className="relative">
+        <input
+          type="number"
+          step="0.1"
+          min="0"
+          max="100"
+          value={inputStrings[key]}
+          onChange={e => handleInputChange(key, e.target.value)}
+          className="w-full px-0 py-1 text-xl bg-transparent border-none text-stone-900 dark:text-white focus:outline-none focus:ring-0 transition-all font-black placeholder-stone-200 dark:placeholder-stone-800"
+          placeholder="0"
+        />
+        <span className="absolute right-0 top-1/2 -translate-y-1/2 text-sm font-black text-stone-300 dark:text-stone-700">%</span>
+      </div>
     </div>
   );
 
-  const renderResultRow = (key: ProbKeys, highlightClass = 'bg-[#E8F5E9] text-[#006400]') => {
+  const renderResultRow = (key: ProbKeys, highlightClass = 'bg-green-50 dark:bg-green-900/10 text-green-800 dark:text-green-300') => {
     const val = solved[key];
     const isKnown = val !== null;
     const isInput = inputs[key] !== null;
     
     return (
-      <tr key={key} className={`border-b border-white/50 ${highlightClass} ${isInput ? 'font-bold' : ''}`}>
-        <td className="px-3 py-2 whitespace-nowrap">{getSymbol(key)}</td>
-        <td className="px-3 py-2 text-right">{isKnown ? val.toFixed(4) : '?'}</td>
-        <td className="px-3 py-2 text-right">{isKnown ? (val * 100).toFixed(2) + '%' : '?'}</td>
-        <td className="px-3 py-2 text-xs opacity-80">{getDesc(key)}</td>
+      <tr key={key} className={`border-b border-stone-100 dark:border-stone-800/50 ${highlightClass} ${isInput ? 'font-bold' : ''}`}>
+        <td className="px-3 py-2 whitespace-nowrap font-mono text-xs">{getSymbol(key)}</td>
+        <td className="px-3 py-2 text-right font-mono">{isKnown ? val.toFixed(4) : '?'}</td>
+        <td className="px-3 py-2 text-right font-mono">{isKnown ? (val * 100).toFixed(2) + '%' : '?'}</td>
+        <td className="px-3 py-2 text-[10px] opacity-70 italic">{getDesc(key)}</td>
       </tr>
     );
   };
@@ -243,128 +256,151 @@ export function BayesCalculator() {
   ];
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
-      <div className="bg-[#8B6914] p-6 text-white">
-        <h2 className="text-2xl font-bold">Advanced Bayes' Theorem Calculator</h2>
-        <p className="text-amber-100 mt-1">Enter known probabilities to automatically derive the rest.</p>
+    <div className="bg-white dark:bg-stone-900 rounded-[2.5rem] shadow-sm border border-stone-200 dark:border-stone-800 overflow-hidden transition-colors">
+      <div className="bg-amber-600 dark:bg-amber-500 p-8 text-white relative overflow-hidden">
+        <div className="relative z-10">
+          <h2 className="text-4xl font-black tracking-tighter">Bayes' Theorem</h2>
+          <p className="text-amber-100 font-medium mt-1">Enter known probabilities in % to derive the complete set.</p>
+        </div>
+        <div className="absolute -right-8 -bottom-8 w-48 h-48 bg-white/10 rounded-full blur-3xl" />
       </div>
 
-      <div className="p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Column: Inputs */}
         <div className="lg:col-span-4 space-y-6">
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="font-semibold text-stone-800">Event Names</h3>
-              <button onClick={clearAll} className="text-sm text-red-600 hover:text-red-800 font-medium">Clear All</button>
+              <h3 className="text-xs font-black uppercase tracking-widest text-stone-400 dark:text-stone-500">Event Names</h3>
+              <button onClick={clearAll} className="text-[10px] font-black uppercase tracking-widest text-red-500 hover:text-red-600 transition-colors">Clear All</button>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs text-stone-500 mb-1">Event A Name</label>
-                <input type="text" value={nameA} onChange={e => setNameA(e.target.value || 'A')} className="w-full px-3 py-2 border border-stone-300 rounded-lg text-sm" />
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-stone-500 dark:text-stone-400 ml-1 uppercase tracking-wider">Event A</label>
+                <input type="text" value={nameA} onChange={e => setNameA(e.target.value || 'A')} className="w-full px-4 py-2.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-sm font-medium text-stone-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none transition-all" />
               </div>
-              <div>
-                <label className="block text-xs text-stone-500 mb-1">Event B Name</label>
-                <input type="text" value={nameB} onChange={e => setNameB(e.target.value || 'B')} className="w-full px-3 py-2 border border-stone-300 rounded-lg text-sm" />
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-stone-500 dark:text-stone-400 ml-1 uppercase tracking-wider">Event B</label>
+                <input type="text" value={nameB} onChange={e => setNameB(e.target.value || 'B')} className="w-full px-4 py-2.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-sm font-medium text-stone-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none transition-all" />
               </div>
             </div>
-            <p className="text-xs text-stone-500 italic">Hint: You typically need at least 2 or 3 values to derive the rest.</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            <div className="col-span-2 text-xs font-semibold text-stone-500 uppercase mt-2">Marginals</div>
-            {renderInputRow('pA')} {renderInputRow('pB')}
-            {renderInputRow('pAc')} {renderInputRow('pBc')}
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-2 gap-4">
+            <div className="col-span-full text-[10px] font-black text-stone-400 dark:text-stone-600 uppercase tracking-[0.2em] mt-4 mb-1 flex items-center gap-2">
+              <div className="h-px flex-1 bg-stone-100 dark:bg-stone-800" />
+              Marginals
+              <div className="h-px flex-1 bg-stone-100 dark:bg-stone-800" />
+            </div>
+            {renderInputRow('pA')}{renderInputRow('pB')}
+            {renderInputRow('pAc')}{renderInputRow('pBc')}
             
-            <div className="col-span-2 text-xs font-semibold text-stone-500 uppercase mt-2">Conditionals</div>
-            {renderInputRow('pA_B')} {renderInputRow('pA_Bc')}
-            {renderInputRow('pAc_B')} {renderInputRow('pAc_Bc')}
+            <div className="col-span-full text-[10px] font-black text-stone-400 dark:text-stone-600 uppercase tracking-[0.2em] mt-6 mb-1 flex items-center gap-2">
+              <div className="h-px flex-1 bg-stone-100 dark:bg-stone-800" />
+              Conditionals
+              <div className="h-px flex-1 bg-stone-100 dark:bg-stone-800" />
+            </div>
+            {renderInputRow('pA_B')}{renderInputRow('pA_Bc')}
+            {renderInputRow('pAc_B')}{renderInputRow('pAc_Bc')}
             
-            <div className="col-span-2 text-xs font-semibold text-stone-500 uppercase mt-2">Bayes Posteriors</div>
-            {renderInputRow('pB_A')} {renderInputRow('pBc_A')}
-            {renderInputRow('pB_Ac')} {renderInputRow('pBc_Ac')}
+            <div className="col-span-full text-[10px] font-black text-stone-400 dark:text-stone-600 uppercase tracking-[0.2em] mt-6 mb-1 flex items-center gap-2">
+              <div className="h-px flex-1 bg-stone-100 dark:bg-stone-800" />
+              Posteriors
+              <div className="h-px flex-1 bg-stone-100 dark:bg-stone-800" />
+            </div>
+            {renderInputRow('pB_A')}{renderInputRow('pBc_A')}
+            {renderInputRow('pB_Ac')}{renderInputRow('pBc_Ac')}
             
-            <div className="col-span-2 text-xs font-semibold text-stone-500 uppercase mt-2">Joints</div>
-            {renderInputRow('pA_and_B')} {renderInputRow('pA_and_Bc')}
-            {renderInputRow('pAc_and_B')} {renderInputRow('pAc_and_Bc')}
+            <div className="col-span-full text-[10px] font-black text-stone-400 dark:text-stone-600 uppercase tracking-[0.2em] mt-6 mb-1 flex items-center gap-2">
+              <div className="h-px flex-1 bg-stone-100 dark:bg-stone-800" />
+              Joints
+              <div className="h-px flex-1 bg-stone-100 dark:bg-stone-800" />
+            </div>
+            {renderInputRow('pA_and_B')}{renderInputRow('pA_and_Bc')}
+            {renderInputRow('pAc_and_B')}{renderInputRow('pAc_and_Bc')}
             
-            <div className="col-span-2 text-xs font-semibold text-stone-500 uppercase mt-2">Unions</div>
-            {renderInputRow('pA_or_B')} {renderInputRow('pA_or_Bc')}
-            {renderInputRow('pAc_or_B')} {renderInputRow('pAc_or_Bc')}
+            <div className="col-span-full text-[10px] font-black text-stone-400 dark:text-stone-600 uppercase tracking-[0.2em] mt-6 mb-1 flex items-center gap-2">
+              <div className="h-px flex-1 bg-stone-100 dark:bg-stone-800" />
+              Unions
+              <div className="h-px flex-1 bg-stone-100 dark:bg-stone-800" />
+            </div>
+            {renderInputRow('pA_or_B')}{renderInputRow('pA_or_Bc')}
+            {renderInputRow('pAc_or_B')}{renderInputRow('pAc_or_Bc')}
           </div>
         </div>
 
         {/* Right Column: Results & Analysis */}
         <div className="lg:col-span-8 space-y-6">
-          <div className="overflow-x-auto rounded-xl border border-stone-200">
+          <div className="overflow-x-auto rounded-3xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm">
             <table className="w-full text-sm text-left">
-              <thead className="text-xs text-stone-500 uppercase bg-stone-50">
+              <thead className="text-[10px] text-stone-400 dark:text-stone-500 uppercase tracking-widest bg-stone-50 dark:bg-stone-800/50">
                 <tr>
-                  <th className="px-3 py-2">Symbol</th>
-                  <th className="px-3 py-2 text-right">Decimal</th>
-                  <th className="px-3 py-2 text-right">Percent</th>
-                  <th className="px-3 py-2">Description</th>
+                  <th className="px-4 py-3">Symbol</th>
+                  <th className="px-4 py-3 text-right">Decimal</th>
+                  <th className="px-4 py-3 text-right">Percent</th>
+                  <th className="px-4 py-3">Description</th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="bg-stone-100"><td colSpan={4} className="px-3 py-1 text-xs font-bold text-stone-600">Marginals</td></tr>
-                {renderResultRow('pA')} {renderResultRow('pB')} {renderResultRow('pAc')} {renderResultRow('pBc')}
+                <tr className="bg-stone-50 dark:bg-stone-800/30"><td colSpan={4} className="px-4 py-1.5 text-[10px] font-black text-stone-400 dark:text-stone-600 uppercase tracking-widest">Marginals</td></tr>
+                {renderResultRow('pA')}{renderResultRow('pB')}{renderResultRow('pAc')}{renderResultRow('pBc')}
                 
-                <tr className="bg-stone-100"><td colSpan={4} className="px-3 py-1 text-xs font-bold text-stone-600">Conditionals</td></tr>
-                {renderResultRow('pA_B')} {renderResultRow('pA_Bc')} {renderResultRow('pAc_B')} {renderResultRow('pAc_Bc')}
+                <tr className="bg-stone-50 dark:bg-stone-800/30"><td colSpan={4} className="px-4 py-1.5 text-[10px] font-black text-stone-400 dark:text-stone-600 uppercase tracking-widest">Conditionals</td></tr>
+                {renderResultRow('pA_B')}{renderResultRow('pA_Bc')}{renderResultRow('pAc_B')}{renderResultRow('pAc_Bc')}
                 
-                <tr className="bg-stone-100"><td colSpan={4} className="px-3 py-1 text-xs font-bold text-stone-600">Bayes Posteriors</td></tr>
-                {renderResultRow('pB_A', 'bg-[#FFF9C4] text-stone-900 font-medium')} 
-                {renderResultRow('pBc_A', 'bg-[#FFF9C4] text-stone-900 font-medium')} 
-                {renderResultRow('pB_Ac', 'bg-[#FFF9C4] text-stone-900 font-medium')} 
-                {renderResultRow('pBc_Ac', 'bg-[#FFF9C4] text-stone-900 font-medium')}
+                <tr className="bg-stone-50 dark:bg-stone-800/30"><td colSpan={4} className="px-4 py-1.5 text-[10px] font-black text-stone-400 dark:text-stone-600 uppercase tracking-widest">Bayes Posteriors</td></tr>
+                {renderResultRow('pB_A', 'bg-amber-50 dark:bg-amber-900/10 text-amber-900 dark:text-amber-300')}
+                {renderResultRow('pBc_A', 'bg-amber-50 dark:bg-amber-900/10 text-amber-900 dark:text-amber-300')}
+                {renderResultRow('pB_Ac', 'bg-amber-50 dark:bg-amber-900/10 text-amber-900 dark:text-amber-300')}
+                {renderResultRow('pBc_Ac', 'bg-amber-50 dark:bg-amber-900/10 text-amber-900 dark:text-amber-300')}
                 
-                <tr className="bg-stone-100"><td colSpan={4} className="px-3 py-1 text-xs font-bold text-stone-600">Joints</td></tr>
-                {renderResultRow('pA_and_B')} {renderResultRow('pA_and_Bc')} {renderResultRow('pAc_and_B')} {renderResultRow('pAc_and_Bc')}
+                <tr className="bg-stone-50 dark:bg-stone-800/30"><td colSpan={4} className="px-4 py-1.5 text-[10px] font-black text-stone-400 dark:text-stone-600 uppercase tracking-widest">Joints</td></tr>
+                {renderResultRow('pA_and_B')}{renderResultRow('pA_and_Bc')}{renderResultRow('pAc_and_B')}{renderResultRow('pAc_and_Bc')}
                 
-                <tr className="bg-stone-100"><td colSpan={4} className="px-3 py-1 text-xs font-bold text-stone-600">Unions</td></tr>
-                {renderResultRow('pA_or_B', 'bg-[#E3F2FD] text-blue-900')} 
-                {renderResultRow('pA_or_Bc', 'bg-[#E3F2FD] text-blue-900')} 
-                {renderResultRow('pAc_or_B', 'bg-[#E3F2FD] text-blue-900')} 
-                {renderResultRow('pAc_or_Bc', 'bg-[#E3F2FD] text-blue-900')}
+                <tr className="bg-stone-50 dark:bg-stone-800/30"><td colSpan={4} className="px-4 py-1.5 text-[10px] font-black text-stone-400 dark:text-stone-600 uppercase tracking-widest">Unions</td></tr>
+                {renderResultRow('pA_or_B', 'bg-blue-50 dark:bg-blue-900/10 text-blue-900 dark:text-blue-300')}
+                {renderResultRow('pA_or_Bc', 'bg-blue-50 dark:bg-blue-900/10 text-blue-900 dark:text-blue-300')}
+                {renderResultRow('pAc_or_B', 'bg-blue-50 dark:bg-blue-900/10 text-blue-900 dark:text-blue-300')}
+                {renderResultRow('pAc_or_Bc', 'bg-blue-50 dark:bg-blue-900/10 text-blue-900 dark:text-blue-300')}
               </tbody>
             </table>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-stone-50 p-4 rounded-xl border border-stone-200">
-              <h4 className="font-bold text-stone-800 mb-2 text-sm">Interpretation</h4>
-              <ul className="text-xs text-stone-600 space-y-2 list-disc pl-4">
-                <li>The overall probability of {nameA} is {solved.pA !== null ? (solved.pA * 100).toFixed(1) + '%' : '?'}.</li>
-                <li>Given {nameA}, the probability of {nameB} is {solved.pB_A !== null ? (solved.pB_A * 100).toFixed(1) + '%' : '?'}.</li>
-                <li>The probability of both {nameA} and {nameB} occurring is {solved.pA_and_B !== null ? (solved.pA_and_B * 100).toFixed(1) + '%' : '?'}.</li>
-                <li>The probability of either {nameA} or {nameB} occurring is {solved.pA_or_B !== null ? (solved.pA_or_B * 100).toFixed(1) + '%' : '?'}.</li>
+            <div className="bg-stone-50 dark:bg-stone-800/50 p-6 rounded-3xl border border-stone-200 dark:border-stone-800">
+              <h4 className="text-[10px] font-black text-stone-400 dark:text-stone-500 uppercase tracking-widest mb-4">Interpretation</h4>
+              <ul className="text-xs text-stone-600 dark:text-stone-400 space-y-3 list-disc pl-4">
+                <li>The overall probability of {nameA} is <span className="font-bold text-stone-900 dark:text-white">{solved.pA !== null ? (solved.pA * 100).toFixed(1) + '%' : '?'}</span>.</li>
+                <li>Given {nameA}, the probability of {nameB} is <span className="font-bold text-stone-900 dark:text-white">{solved.pB_A !== null ? (solved.pB_A * 100).toFixed(1) + '%' : '?'}</span>.</li>
+                <li>The probability of both {nameA} and {nameB} occurring is <span className="font-bold text-stone-900 dark:text-white">{solved.pA_and_B !== null ? (solved.pA_and_B * 100).toFixed(1) + '%' : '?'}</span>.</li>
+                <li>The probability of either {nameA} or {nameB} occurring is <span className="font-bold text-stone-900 dark:text-white">{solved.pA_or_B !== null ? (solved.pA_or_B * 100).toFixed(1) + '%' : '?'}</span>.</li>
               </ul>
             </div>
             
-            <div className="bg-stone-50 p-4 rounded-xl border border-stone-200">
-              <h4 className="font-bold text-stone-800 mb-2 text-sm">Independence Test</h4>
-              <div className="text-center py-2">
-                <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${
-                  independenceVerdict === 'INDEPENDENT' ? 'bg-green-100 text-green-800' : 
-                  independenceVerdict === 'DEPENDENT' ? 'bg-red-100 text-red-800' : 'bg-stone-200 text-stone-600'
+            <div className="bg-stone-50 dark:bg-stone-800/50 p-6 rounded-3xl border border-stone-200 dark:border-stone-800">
+              <h4 className="text-[10px] font-black text-stone-400 dark:text-stone-500 uppercase tracking-widest mb-4">Independence Test</h4>
+              <div className="text-center py-4">
+                <span className={`inline-block px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                  independenceVerdict === 'INDEPENDENT' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 
+                  independenceVerdict === 'DEPENDENT' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' : 'bg-stone-200 text-stone-600 dark:bg-stone-700 dark:text-stone-400'
                 }`}>
                   {independenceVerdict}
                 </span>
               </div>
               {independenceVerdict === 'DEPENDENT' && (
-                <p className="text-xs text-center mt-2 text-stone-600">
-                  {independenceGap > 0 ? 'Positive' : 'Negative'} correlation (gap: {Math.abs(independenceGap).toFixed(4)})
+                <p className="text-[10px] font-bold text-center mt-2 text-stone-500 uppercase tracking-wider">
+                  {independenceGap > 0 ? 'Positive' : 'Negative'} correlation<br/>
+                  <span className="opacity-60">Gap: {Math.abs(independenceGap).toFixed(4)}</span>
                 </p>
               )}
             </div>
 
-            <div className="bg-stone-50 p-4 rounded-xl border border-stone-200">
-              <h4 className="font-bold text-stone-800 mb-2 text-sm">Verification</h4>
-              <ul className="text-xs space-y-2">
+            <div className="bg-stone-50 dark:bg-stone-800/50 p-6 rounded-3xl border border-stone-200 dark:border-stone-800">
+              <h4 className="text-[10px] font-black text-stone-400 dark:text-stone-500 uppercase tracking-widest mb-4">Verification</h4>
+              <ul className="text-[10px] font-bold space-y-3">
                 {checks.map((check, i) => (
                   <li key={i} className="flex items-center justify-between">
-                    <span className="text-stone-600 truncate mr-2" title={check.name}>{check.name}</span>
-                    <span>{check.pass === true ? '✅' : check.pass === false ? '❌' : '❔'}</span>
+                    <span className="text-stone-500 dark:text-stone-400 truncate mr-2 uppercase tracking-wider" title={check.name}>{check.name}</span>
+                    <span className="text-sm">{check.pass === true ? '✅' : check.pass === false ? '❌' : '❔'}</span>
                   </li>
                 ))}
               </ul>
