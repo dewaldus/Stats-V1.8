@@ -1,0 +1,5 @@
+{
+  "name": "Probability Distributions Calculator",
+  "description": "A comprehensive calculator for continuous and discrete probability distributions including Normal, Uniform, Binomial, Poisson, and Hypergeometric.",
+  "requestFramePermissions": []
+}
