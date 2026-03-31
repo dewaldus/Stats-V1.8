@@ -22,5 +22,19 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "include": [
+    "src",
+    "src-tauri",
+    "index.html",
+    "vite.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    "src-tauri/target",
+    "src-tauri/gen"
+  ]
 }

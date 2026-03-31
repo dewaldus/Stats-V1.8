@@ -66,26 +66,29 @@ export function NormalCalculator() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-4 space-y-6">
-          <section className="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm space-y-6">
+          <section className="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm space-y-6" aria-label="Distribution parameters">
             <div className="flex items-center gap-2 text-stone-400 dark:text-stone-500">
-              <Settings2 className="w-4 h-4" />
+              <Settings2 className="w-4 h-4" aria-hidden="true" />
               <h3 className="text-xs font-black uppercase tracking-widest">Configuration</h3>
             </div>
-            
-            <div className="grid grid-cols-2 gap-4">
+
+            <fieldset className="grid grid-cols-2 gap-4 border-0 p-0 m-0">
+              <legend className="sr-only">Distribution parameters</legend>
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Mean (μ)</label>
-                <input type="number" value={mu} onChange={e => setMu(Number(e.target.value))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-medium" />
+                <label htmlFor="norm-mu" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Mean (μ)</label>
+                <input id="norm-mu" type="number" value={mu} onChange={e => setMu(Number(e.target.value))} aria-describedby="norm-mu-hint" className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-medium" />
+                <span id="norm-mu-hint" className="sr-only">Mean of the normal distribution</span>
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Std Dev (σ)</label>
-                <input type="number" value={sigma} onChange={e => setSigma(Number(e.target.value))} min="0.0001" step="0.1" className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-medium" />
+                <label htmlFor="norm-sigma" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Std Dev (σ)</label>
+                <input id="norm-sigma" type="number" value={sigma} onChange={e => setSigma(Number(e.target.value))} min="0.0001" step="0.1" aria-describedby="norm-sigma-hint" className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-medium" />
+                <span id="norm-sigma-hint" className="sr-only">Standard deviation, must be greater than zero</span>
               </div>
-            </div>
+            </fieldset>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Calculation Type</label>
-              <select value={calcType} onChange={e => setCalcType(e.target.value as any)} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-medium appearance-none">
+              <label htmlFor="norm-calctype" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Calculation Type</label>
+              <select id="norm-calctype" value={calcType} onChange={e => setCalcType(e.target.value as any)} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-medium appearance-none">
                 <option value="less">P(X ≤ x) [Less than]</option>
                 <option value="greater">P(X {'>'} x) [Greater than]</option>
                 <option value="between">P(x₁ ≤ X ≤ x₂) [Between]</option>
@@ -95,30 +98,39 @@ export function NormalCalculator() {
 
             {calcType === 'less' || calcType === 'greater' ? (
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Value (x)</label>
-                <input type="number" value={xVal} onChange={e => setXVal(Number(e.target.value))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-medium" />
+                <label htmlFor="norm-x" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Value (x)</label>
+                <input id="norm-x" type="number" value={xVal} onChange={e => setXVal(Number(e.target.value))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-medium" />
               </div>
             ) : calcType === 'between' ? (
-              <div className="grid grid-cols-2 gap-4">
+              <fieldset className="grid grid-cols-2 gap-4 border-0 p-0 m-0">
+                <legend className="sr-only">Value range</legend>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Lower (x₁)</label>
-                  <input type="number" value={x1Val} onChange={e => setX1Val(Number(e.target.value))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-medium" />
+                  <label htmlFor="norm-x1" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Lower (x₁)</label>
+                  <input id="norm-x1" type="number" value={x1Val} onChange={e => setX1Val(Number(e.target.value))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-medium" />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Upper (x₂)</label>
-                  <input type="number" value={x2Val} onChange={e => setX2Val(Number(e.target.value))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-medium" />
+                  <label htmlFor="norm-x2" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Upper (x₂)</label>
+                  <input id="norm-x2" type="number" value={x2Val} onChange={e => setX2Val(Number(e.target.value))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-medium" />
                 </div>
-              </div>
+              </fieldset>
             ) : (
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Probability (p)</label>
-                <input type="number" value={pVal} onChange={e => setPVal(Number(e.target.value))} min="0.0001" max="0.9999" step="0.01" className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-medium" />
+                <label htmlFor="norm-pval" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Probability (p)</label>
+                <input id="norm-pval" type="number" value={pVal} onChange={e => setPVal(Number(e.target.value))} min="0.0001" max="0.9999" step="0.01" aria-describedby="norm-pval-hint" className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-medium" />
+                <span id="norm-pval-hint" className="sr-only">Probability value between 0.0001 and 0.9999 for inverse calculation</span>
               </div>
             )}
           </section>
 
-          <motion.div 
+          <motion.div
             layout
+            role="status"
+            aria-live="polite"
+            aria-label={result !== null
+              ? calcType === 'inverse'
+                ? `Inverse result: x equals ${result.toFixed(4)}`
+                : `Calculated probability: ${(result * 100).toFixed(2)} percent`
+              : 'Calculation error'}
             className="p-8 bg-indigo-600 dark:bg-indigo-500 rounded-[2rem] text-white shadow-2xl shadow-indigo-500/20 relative overflow-hidden group"
           >
             <div className="relative z-10">
@@ -128,12 +140,12 @@ export function NormalCalculator() {
               </div>
               {result !== null && calcType !== 'inverse' && (
                 <div className="text-sm font-bold opacity-80 flex items-center gap-1.5">
-                  <Info className="w-3.5 h-3.5" />
+                  <Info className="w-3.5 h-3.5" aria-hidden="true" />
                   Probability: {result.toFixed(6)}
                 </div>
               )}
             </div>
-            <div className="absolute -right-4 -bottom-4 w-32 h-32 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
+            <div className="absolute -right-4 -bottom-4 w-32 h-32 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" aria-hidden="true" />
           </motion.div>
         </div>
 
@@ -146,11 +158,11 @@ export function NormalCalculator() {
             <div className="flex-1 bg-white dark:bg-stone-900 p-8 rounded-[2.5rem] border border-stone-200 dark:border-stone-800 shadow-sm min-h-[500px] flex flex-col">
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-2 text-stone-400 dark:text-stone-500">
-                  <BarChart3 className="w-4 h-4" />
+                  <BarChart3 className="w-4 h-4" aria-hidden="true" />
                   <h3 className="text-xs font-black uppercase tracking-widest">Distribution Visualization</h3>
                 </div>
               </div>
-              <div className="flex-1">
+              <div className="flex-1" role="img" aria-label={`Area chart showing Normal distribution with mean ${mu} and standard deviation ${sigma}`}>
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={chartData} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
                     <defs>

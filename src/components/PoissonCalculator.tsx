@@ -85,29 +85,34 @@ export function PoissonCalculator() {
 
         {/* Controls Section */}
         <div className="lg:col-span-4 space-y-6">
-          <section className="p-8 bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm space-y-6">
+          <section className="p-8 bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm space-y-6" aria-label="Distribution parameters">
             <div className="flex items-center gap-2 mb-2">
-              <Settings2 className="w-4 h-4 text-indigo-500" />
+              <Settings2 className="w-4 h-4 text-indigo-500" aria-hidden="true" />
               <h3 className="text-sm font-black text-stone-900 dark:text-white uppercase tracking-widest">Parameters</h3>
             </div>
-            
+
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Mean / Rate (λ)</label>
-                <input 
-                  type="number" 
-                  value={lambda} 
-                  onChange={e => setLambda(Math.max(0, Number(e.target.value)))} 
-                  step="0.1" 
-                  className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium" 
+                <label htmlFor="pois-lambda" className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Mean / Rate (λ)</label>
+                <input
+                  id="pois-lambda"
+                  type="number"
+                  value={lambda}
+                  onChange={e => setLambda(Math.max(0, Number(e.target.value)))}
+                  step="0.1"
+                  min="0"
+                  aria-describedby="pois-lambda-hint"
+                  className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium"
                 />
+                <span id="pois-lambda-hint" className="sr-only">Mean event rate, must be non-negative</span>
               </div>
 
               <div className="pt-4 border-t border-stone-100 dark:border-stone-800">
-                <label className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Calculation Type</label>
-                <select 
-                  value={calcType} 
-                  onChange={e => setCalcType(e.target.value as any)} 
+                <label htmlFor="pois-calctype" className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Calculation Type</label>
+                <select
+                  id="pois-calctype"
+                  value={calcType}
+                  onChange={e => setCalcType(e.target.value as any)}
                   className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium appearance-none"
                 >
                   <option value="exact">P(X = x) [Exact]</option>
@@ -118,42 +123,49 @@ export function PoissonCalculator() {
               </div>
 
               {calcType === 'between' ? (
-                <div className="grid grid-cols-2 gap-4">
+                <fieldset className="grid grid-cols-2 gap-4 border-0 p-0 m-0">
+                  <legend className="sr-only">Value range</legend>
                   <div>
-                    <label className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Lower (x₁)</label>
-                    <input 
-                      type="number" 
-                      value={x1Val} 
-                      onChange={e => setX1Val(parseInt(e.target.value) || 0)} 
-                      className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium" 
+                    <label htmlFor="pois-x1" className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Lower (x₁)</label>
+                    <input
+                      id="pois-x1"
+                      type="number"
+                      value={x1Val}
+                      onChange={e => setX1Val(parseInt(e.target.value) || 0)}
+                      className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Upper (x₂)</label>
-                    <input 
-                      type="number" 
-                      value={x2Val} 
-                      onChange={e => setX2Val(parseInt(e.target.value) || 0)} 
-                      className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium" 
+                    <label htmlFor="pois-x2" className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Upper (x₂)</label>
+                    <input
+                      id="pois-x2"
+                      type="number"
+                      value={x2Val}
+                      onChange={e => setX2Val(parseInt(e.target.value) || 0)}
+                      className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium"
                     />
                   </div>
-                </div>
+                </fieldset>
               ) : (
                 <div>
-                  <label className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Value (x)</label>
-                  <input 
-                    type="number" 
-                    value={xVal} 
-                    onChange={e => setXVal(parseInt(e.target.value) || 0)} 
-                    className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium" 
+                  <label htmlFor="pois-x" className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Value (x)</label>
+                  <input
+                    id="pois-x"
+                    type="number"
+                    value={xVal}
+                    onChange={e => setXVal(parseInt(e.target.value) || 0)}
+                    className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium"
                   />
                 </div>
               )}
             </div>
           </section>
 
-          <motion.div 
+          <motion.div
             layout
+            role="status"
+            aria-live="polite"
+            aria-label={result !== null ? `Probability result: ${(result * 100).toFixed(2)} percent` : 'Calculation error'}
             className="p-8 bg-indigo-600 dark:bg-indigo-500 rounded-3xl shadow-xl shadow-indigo-500/20 text-white"
           >
             <div className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 mb-2">Probability Result</div>
@@ -176,19 +188,19 @@ export function PoissonCalculator() {
                 <BarChart3 className="w-4 h-4 text-indigo-500" />
                 <h3 className="text-sm font-black text-stone-900 dark:text-white uppercase tracking-widest">Probability Mass Function</h3>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-indigo-500 rounded-full" />
-                  <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Selected</span>
+              <div className="flex items-center gap-4" role="list" aria-label="Chart legend">
+                <div className="flex items-center gap-2" role="listitem">
+                  <div className="w-3 h-3 bg-indigo-500 rounded-full" aria-hidden="true" />
+                  <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Selected (highlighted bars)</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-stone-200 dark:bg-stone-700 rounded-full" />
-                  <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Other</span>
+                <div className="flex items-center gap-2" role="listitem">
+                  <div className="w-3 h-3 bg-stone-200 dark:bg-stone-700 rounded-full" aria-hidden="true" />
+                  <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Other (non-selected bars)</span>
                 </div>
               </div>
             </div>
 
-            <div className="flex-1 min-h-[350px]">
+            <div className="flex-1 min-h-[350px]" role="img" aria-label={`Bar chart showing Poisson probability mass function with rate lambda ${lambda}`}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} opacity={0.1} />
@@ -234,9 +246,9 @@ export function PoissonCalculator() {
             </div>
 
             <div className="mt-8 p-6 bg-stone-50 dark:bg-stone-800/50 rounded-2xl flex items-start gap-4">
-              <Info className="w-5 h-5 text-indigo-500 mt-0.5" />
+              <Info className="w-5 h-5 text-indigo-500 mt-0.5" aria-hidden="true" />
               <div className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
-                The <strong>Poisson distribution</strong> models the number of times an event occurs in a fixed interval of time or space. 
+                The <strong>Poisson distribution</strong> models the number of times an event occurs in a fixed interval of time or space.
                 It assumes events occur with a known constant mean rate and independently of the time since the last event.
               </div>
             </div>

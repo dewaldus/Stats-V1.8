@@ -271,18 +271,21 @@ export function BayesCalculator() {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <h3 className="text-xs font-black uppercase tracking-widest text-stone-400 dark:text-stone-500">Event Names</h3>
-              <button onClick={clearAll} className="text-[10px] font-black uppercase tracking-widest text-red-500 hover:text-red-600 transition-colors">Clear All</button>
+              <button onClick={clearAll} aria-label="Clear all probability inputs" className="text-[10px] font-black uppercase tracking-widest text-red-500 hover:text-red-600 transition-colors">Clear All</button>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <fieldset className="grid grid-cols-2 gap-4 border-0 p-0 m-0">
+              <legend className="sr-only">Event names</legend>
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-stone-500 dark:text-stone-400 ml-1 uppercase tracking-wider">Event A</label>
-                <input type="text" value={nameA} onChange={e => setNameA(e.target.value || 'A')} className="w-full px-4 py-2.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-sm font-medium text-stone-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none transition-all" />
+                <label htmlFor="bayes-nameA" className="text-[10px] font-bold text-stone-500 dark:text-stone-400 ml-1 uppercase tracking-wider">Event A</label>
+                <input id="bayes-nameA" type="text" value={nameA} onChange={e => setNameA(e.target.value || 'A')} aria-describedby="bayes-nameA-hint" className="w-full px-4 py-2.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-sm font-medium text-stone-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none transition-all" />
+                <span id="bayes-nameA-hint" className="sr-only">Label for event A used in probability notation</span>
               </div>
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-stone-500 dark:text-stone-400 ml-1 uppercase tracking-wider">Event B</label>
-                <input type="text" value={nameB} onChange={e => setNameB(e.target.value || 'B')} className="w-full px-4 py-2.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-sm font-medium text-stone-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none transition-all" />
+                <label htmlFor="bayes-nameB" className="text-[10px] font-bold text-stone-500 dark:text-stone-400 ml-1 uppercase tracking-wider">Event B</label>
+                <input id="bayes-nameB" type="text" value={nameB} onChange={e => setNameB(e.target.value || 'B')} aria-describedby="bayes-nameB-hint" className="w-full px-4 py-2.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-sm font-medium text-stone-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none transition-all" />
+                <span id="bayes-nameB-hint" className="sr-only">Label for event B used in probability notation</span>
               </div>
-            </div>
+            </fieldset>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-2 gap-4">

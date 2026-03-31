@@ -73,26 +73,29 @@ export function UniformCalculator() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-4 space-y-6">
-          <section className="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm space-y-6">
+          <section className="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm space-y-6" aria-label="Distribution parameters">
             <div className="flex items-center gap-2 text-stone-400 dark:text-stone-500">
-              <Settings2 className="w-4 h-4" />
+              <Settings2 className="w-4 h-4" aria-hidden="true" />
               <h3 className="text-xs font-black uppercase tracking-widest">Parameters</h3>
             </div>
-            
-            <div className="grid grid-cols-2 gap-4">
+
+            <fieldset className="grid grid-cols-2 gap-4 border-0 p-0 m-0">
+              <legend className="sr-only">Distribution range parameters</legend>
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Lower (a)</label>
-                <input type="number" value={a} onChange={e => setA(Number(e.target.value))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-medium" />
+                <label htmlFor="unif-a" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Lower (a)</label>
+                <input id="unif-a" type="number" value={a} onChange={e => setA(Number(e.target.value))} aria-describedby="unif-a-hint" className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-medium" />
+                <span id="unif-a-hint" className="sr-only">Lower bound of the uniform distribution</span>
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Upper (b)</label>
-                <input type="number" value={b} onChange={e => setB(Number(e.target.value))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-medium" />
+                <label htmlFor="unif-b" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Upper (b)</label>
+                <input id="unif-b" type="number" value={b} onChange={e => setB(Number(e.target.value))} aria-describedby="unif-b-hint" className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-medium" />
+                <span id="unif-b-hint" className="sr-only">Upper bound, must be greater than lower bound</span>
               </div>
-            </div>
+            </fieldset>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Calculation Type</label>
-              <select value={calcType} onChange={e => setCalcType(e.target.value as any)} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-medium appearance-none">
+              <label htmlFor="unif-calctype" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Calculation Type</label>
+              <select id="unif-calctype" value={calcType} onChange={e => setCalcType(e.target.value as any)} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-medium appearance-none">
                 <option value="less">P(X ≤ x) [Less than]</option>
                 <option value="greater">P(X {'>'} x) [Greater than]</option>
                 <option value="between">P(x₁ ≤ X ≤ x₂) [Between]</option>
@@ -101,20 +104,21 @@ export function UniformCalculator() {
 
             {calcType === 'less' || calcType === 'greater' ? (
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Value (x)</label>
-                <input type="number" value={xVal} onChange={e => setXVal(Number(e.target.value))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-medium" />
+                <label htmlFor="unif-x" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Value (x)</label>
+                <input id="unif-x" type="number" value={xVal} onChange={e => setXVal(Number(e.target.value))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-medium" />
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-4">
+              <fieldset className="grid grid-cols-2 gap-4 border-0 p-0 m-0">
+                <legend className="sr-only">Value range</legend>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Lower (x₁)</label>
-                  <input type="number" value={x1Val} onChange={e => setX1Val(Number(e.target.value))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-medium" />
+                  <label htmlFor="unif-x1" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Lower (x₁)</label>
+                  <input id="unif-x1" type="number" value={x1Val} onChange={e => setX1Val(Number(e.target.value))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-medium" />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Upper (x₂)</label>
-                  <input type="number" value={x2Val} onChange={e => setX2Val(Number(e.target.value))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-medium" />
+                  <label htmlFor="unif-x2" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Upper (x₂)</label>
+                  <input id="unif-x2" type="number" value={x2Val} onChange={e => setX2Val(Number(e.target.value))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-medium" />
                 </div>
-              </div>
+              </fieldset>
             )}
           </section>
 
@@ -133,8 +137,11 @@ export function UniformCalculator() {
             </div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             layout
+            role="status"
+            aria-live="polite"
+            aria-label={result !== null ? `Calculated probability: ${(result * 100).toFixed(2)} percent` : 'Calculation error'}
             className="p-8 bg-emerald-600 dark:bg-emerald-500 rounded-[2rem] text-white shadow-2xl shadow-emerald-500/20 relative overflow-hidden group"
           >
             <div className="relative z-10">
@@ -144,12 +151,12 @@ export function UniformCalculator() {
               </div>
               {result !== null && (
                 <div className="text-sm font-bold opacity-80 flex items-center gap-1.5">
-                  <Info className="w-3.5 h-3.5" />
+                  <Info className="w-3.5 h-3.5" aria-hidden="true" />
                   Probability: {result.toFixed(6)}
                 </div>
               )}
             </div>
-            <div className="absolute -right-4 -bottom-4 w-32 h-32 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
+            <div className="absolute -right-4 -bottom-4 w-32 h-32 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" aria-hidden="true" />
           </motion.div>
         </div>
 
@@ -157,11 +164,11 @@ export function UniformCalculator() {
           <div className="flex-1 bg-white dark:bg-stone-900 p-8 rounded-[2.5rem] border border-stone-200 dark:border-stone-800 shadow-sm min-h-[500px] flex flex-col">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-2 text-stone-400 dark:text-stone-500">
-                <BarChart3 className="w-4 h-4" />
+                <BarChart3 className="w-4 h-4" aria-hidden="true" />
                 <h3 className="text-xs font-black uppercase tracking-widest">PDF Visualization</h3>
               </div>
             </div>
-            <div className="flex-1">
+            <div className="flex-1" role="img" aria-label={`Area chart showing Uniform distribution PDF from ${a} to ${b}`}>
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
                   <defs>

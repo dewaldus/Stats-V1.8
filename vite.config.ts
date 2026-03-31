@@ -16,9 +16,14 @@ export default defineConfig(({mode}) => {
       },
     },
     server: {
-      // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
+      port: 3000,
+      strictPort: true,
       hmr: process.env.DISABLE_HMR !== 'true',
+    },
+    build: {
+      target: ['es2021', 'chrome100', 'safari13'],
+      minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
+      sourcemap: !!process.env.TAURI_DEBUG,
     },
   };
 });

@@ -90,49 +90,63 @@ export function HypergeometricCalculator() {
 
         {/* Controls Section */}
         <div className="lg:col-span-4 space-y-6">
-          <section className="p-8 bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm space-y-6">
+          <section className="p-8 bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm space-y-6" aria-label="Distribution parameters">
             <div className="flex items-center gap-2 mb-2">
-              <Settings2 className="w-4 h-4 text-indigo-500" />
+              <Settings2 className="w-4 h-4 text-indigo-500" aria-hidden="true" />
               <h3 className="text-sm font-black text-stone-900 dark:text-white uppercase tracking-widest">Parameters</h3>
             </div>
-            
+
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Population Size (N)</label>
-                <input 
-                  type="number" 
-                  value={N} 
-                  onChange={e => setN(Math.max(0, parseInt(e.target.value) || 0))} 
-                  className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium" 
+                <label htmlFor="hyper-N" className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Population Size (N)</label>
+                <input
+                  id="hyper-N"
+                  type="number"
+                  value={N}
+                  onChange={e => setN(Math.max(0, parseInt(e.target.value) || 0))}
+                  min="0"
+                  aria-describedby="hyper-N-hint"
+                  className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium"
                 />
+                <span id="hyper-N-hint" className="sr-only">Total population size</span>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <fieldset className="grid grid-cols-2 gap-4 border-0 p-0 m-0">
+                <legend className="sr-only">Population composition</legend>
                 <div>
-                  <label className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Successes (K)</label>
-                  <input 
-                    type="number" 
-                    value={K} 
-                    onChange={e => setK(Math.max(0, parseInt(e.target.value) || 0))} 
-                    className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium" 
+                  <label htmlFor="hyper-K" className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Successes (K)</label>
+                  <input
+                    id="hyper-K"
+                    type="number"
+                    value={K}
+                    onChange={e => setK(Math.max(0, parseInt(e.target.value) || 0))}
+                    min="0"
+                    aria-describedby="hyper-K-hint"
+                    className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium"
                   />
+                  <span id="hyper-K-hint" className="sr-only">Number of successes in population, must not exceed N</span>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Sample Size (n)</label>
-                  <input 
-                    type="number" 
-                    value={n} 
-                    onChange={e => setn(Math.max(0, parseInt(e.target.value) || 0))} 
-                    className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium" 
+                  <label htmlFor="hyper-n" className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Sample Size (n)</label>
+                  <input
+                    id="hyper-n"
+                    type="number"
+                    value={n}
+                    onChange={e => setn(Math.max(0, parseInt(e.target.value) || 0))}
+                    min="0"
+                    aria-describedby="hyper-n-hint"
+                    className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium"
                   />
+                  <span id="hyper-n-hint" className="sr-only">Number of draws without replacement, must not exceed N</span>
                 </div>
-              </div>
+              </fieldset>
 
               <div className="pt-4 border-t border-stone-100 dark:border-stone-800">
-                <label className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Calculation Type</label>
-                <select 
-                  value={calcType} 
-                  onChange={e => setCalcType(e.target.value as any)} 
+                <label htmlFor="hyper-calctype" className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Calculation Type</label>
+                <select
+                  id="hyper-calctype"
+                  value={calcType}
+                  onChange={e => setCalcType(e.target.value as any)}
                   className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium appearance-none"
                 >
                   <option value="exact">P(X = x) [Exact]</option>
@@ -143,42 +157,49 @@ export function HypergeometricCalculator() {
               </div>
 
               {calcType === 'between' ? (
-                <div className="grid grid-cols-2 gap-4">
+                <fieldset className="grid grid-cols-2 gap-4 border-0 p-0 m-0">
+                  <legend className="sr-only">Value range</legend>
                   <div>
-                    <label className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Lower (x₁)</label>
-                    <input 
-                      type="number" 
-                      value={x1Val} 
-                      onChange={e => setX1Val(parseInt(e.target.value) || 0)} 
-                      className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium" 
+                    <label htmlFor="hyper-x1" className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Lower (x₁)</label>
+                    <input
+                      id="hyper-x1"
+                      type="number"
+                      value={x1Val}
+                      onChange={e => setX1Val(parseInt(e.target.value) || 0)}
+                      className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Upper (x₂)</label>
-                    <input 
-                      type="number" 
-                      value={x2Val} 
-                      onChange={e => setX2Val(parseInt(e.target.value) || 0)} 
-                      className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium" 
+                    <label htmlFor="hyper-x2" className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Upper (x₂)</label>
+                    <input
+                      id="hyper-x2"
+                      type="number"
+                      value={x2Val}
+                      onChange={e => setX2Val(parseInt(e.target.value) || 0)}
+                      className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium"
                     />
                   </div>
-                </div>
+                </fieldset>
               ) : (
                 <div>
-                  <label className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Value (x)</label>
-                  <input 
-                    type="number" 
-                    value={xVal} 
-                    onChange={e => setXVal(parseInt(e.target.value) || 0)} 
-                    className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium" 
+                  <label htmlFor="hyper-x" className="block text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-2">Value (x)</label>
+                  <input
+                    id="hyper-x"
+                    type="number"
+                    value={xVal}
+                    onChange={e => setXVal(parseInt(e.target.value) || 0)}
+                    className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium"
                   />
                 </div>
               )}
             </div>
           </section>
 
-          <motion.div 
+          <motion.div
             layout
+            role="status"
+            aria-live="polite"
+            aria-label={result !== null ? `Probability result: ${(result * 100).toFixed(2)} percent` : 'Calculation error'}
             className="p-8 bg-indigo-600 dark:bg-indigo-500 rounded-3xl shadow-xl shadow-indigo-500/20 text-white"
           >
             <div className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 mb-2">Probability Result</div>
@@ -201,19 +222,19 @@ export function HypergeometricCalculator() {
                 <BarChart3 className="w-4 h-4 text-indigo-500" />
                 <h3 className="text-sm font-black text-stone-900 dark:text-white uppercase tracking-widest">Probability Mass Function</h3>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-indigo-500 rounded-full" />
-                  <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Selected</span>
+              <div className="flex items-center gap-4" role="list" aria-label="Chart legend">
+                <div className="flex items-center gap-2" role="listitem">
+                  <div className="w-3 h-3 bg-indigo-500 rounded-full" aria-hidden="true" />
+                  <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Selected (highlighted bars)</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-stone-200 dark:bg-stone-700 rounded-full" />
-                  <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Other</span>
+                <div className="flex items-center gap-2" role="listitem">
+                  <div className="w-3 h-3 bg-stone-200 dark:bg-stone-700 rounded-full" aria-hidden="true" />
+                  <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Other (non-selected bars)</span>
                 </div>
               </div>
             </div>
 
-            <div className="flex-1 min-h-[350px]">
+            <div className="flex-1 min-h-[350px]" role="img" aria-label={`Bar chart showing Hypergeometric probability mass function with population ${N}, successes ${K}, sample ${n}`}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} opacity={0.1} />
@@ -259,7 +280,7 @@ export function HypergeometricCalculator() {
             </div>
 
             <div className="mt-8 p-6 bg-stone-50 dark:bg-stone-800/50 rounded-2xl flex items-start gap-4">
-              <Info className="w-5 h-5 text-indigo-500 mt-0.5" />
+              <Info className="w-5 h-5 text-indigo-500 mt-0.5" aria-hidden="true" />
               <div className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
                 The <strong>Hypergeometric distribution</strong> models the probability of <em>k</em> successes in <em>n</em> draws, 
                 without replacement, from a finite population of size <em>N</em> that contains exactly <em>K</em> successes.

@@ -68,26 +68,29 @@ export function BinomialCalculator() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-4 space-y-6">
-          <section className="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm space-y-6">
+          <section className="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm space-y-6" aria-label="Distribution parameters">
             <div className="flex items-center gap-2 text-stone-400 dark:text-stone-500">
-              <Settings2 className="w-4 h-4" />
+              <Settings2 className="w-4 h-4" aria-hidden="true" />
               <h3 className="text-xs font-black uppercase tracking-widest">Parameters</h3>
             </div>
-            
-            <div className="grid grid-cols-2 gap-4">
+
+            <fieldset className="grid grid-cols-2 gap-4 border-0 p-0 m-0">
+              <legend className="sr-only">Distribution parameters</legend>
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Trials (n)</label>
-                <input type="number" value={n} onChange={e => setN(Math.max(0, parseInt(e.target.value) || 0))} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all font-medium" />
+                <label htmlFor="binom-n" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Trials (n)</label>
+                <input id="binom-n" type="number" value={n} onChange={e => setN(Math.max(0, parseInt(e.target.value) || 0))} min="0" aria-describedby="binom-n-hint" className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all font-medium" />
+                <span id="binom-n-hint" className="sr-only">Number of independent trials</span>
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Prob (p)</label>
-                <input type="number" value={p} onChange={e => setP(Number(e.target.value))} min="0" max="1" step="0.01" className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all font-medium" />
+                <label htmlFor="binom-p" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Prob (p)</label>
+                <input id="binom-p" type="number" value={p} onChange={e => setP(Number(e.target.value))} min="0" max="1" step="0.01" aria-describedby="binom-p-hint" className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all font-medium" />
+                <span id="binom-p-hint" className="sr-only">Probability of success per trial, between 0 and 1</span>
               </div>
-            </div>
+            </fieldset>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Calculation Type</label>
-              <select value={calcType} onChange={e => setCalcType(e.target.value as any)} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all font-medium appearance-none">
+              <label htmlFor="binom-calctype" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Calculation Type</label>
+              <select id="binom-calctype" value={calcType} onChange={e => setCalcType(e.target.value as any)} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all font-medium appearance-none">
                 <option value="exact">P(X = x) [Exact value]</option>
                 <option value="most">P(X ≤ x) [At most / No more than]</option>
                 <option value="least">P(X ≥ x) [At least / Greater than]</option>
@@ -96,20 +99,21 @@ export function BinomialCalculator() {
             </div>
 
             {calcType === 'between' ? (
-              <div className="grid grid-cols-2 gap-4">
+              <fieldset className="grid grid-cols-2 gap-4 border-0 p-0 m-0">
+                <legend className="sr-only">Value range</legend>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Lower (x₁)</label>
-                  <input type="number" value={x1Val} onChange={e => setX1Val(parseInt(e.target.value) || 0)} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all font-medium" />
+                  <label htmlFor="binom-x1" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Lower (x₁)</label>
+                  <input id="binom-x1" type="number" value={x1Val} onChange={e => setX1Val(parseInt(e.target.value) || 0)} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all font-medium" />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Upper (x₂)</label>
-                  <input type="number" value={x2Val} onChange={e => setX2Val(parseInt(e.target.value) || 0)} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all font-medium" />
+                  <label htmlFor="binom-x2" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Upper (x₂)</label>
+                  <input id="binom-x2" type="number" value={x2Val} onChange={e => setX2Val(parseInt(e.target.value) || 0)} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all font-medium" />
                 </div>
-              </div>
+              </fieldset>
             ) : (
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Value (x)</label>
-                <input type="number" value={xVal} onChange={e => setXVal(parseInt(e.target.value) || 0)} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all font-medium" />
+                <label htmlFor="binom-x" className="text-xs font-bold text-stone-500 dark:text-stone-400 ml-1">Value (x)</label>
+                <input id="binom-x" type="number" value={xVal} onChange={e => setXVal(parseInt(e.target.value) || 0)} className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all font-medium" />
               </div>
             )}
           </section>
@@ -129,8 +133,11 @@ export function BinomialCalculator() {
             </div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             layout
+            role="status"
+            aria-live="polite"
+            aria-label={result !== null ? `Calculated probability: ${(result * 100).toFixed(2)} percent` : 'Calculation error'}
             className="p-8 bg-orange-600 dark:bg-orange-500 rounded-[2rem] text-white shadow-2xl shadow-orange-500/20 relative overflow-hidden group"
           >
             <div className="relative z-10">
@@ -140,12 +147,12 @@ export function BinomialCalculator() {
               </div>
               {result !== null && (
                 <div className="text-sm font-bold opacity-80 flex items-center gap-1.5">
-                  <Info className="w-3.5 h-3.5" />
+                  <Info className="w-3.5 h-3.5" aria-hidden="true" />
                   Probability: {result.toFixed(6)}
                 </div>
               )}
             </div>
-            <div className="absolute -right-4 -bottom-4 w-32 h-32 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
+            <div className="absolute -right-4 -bottom-4 w-32 h-32 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" aria-hidden="true" />
           </motion.div>
         </div>
 
@@ -153,11 +160,11 @@ export function BinomialCalculator() {
           <div className="flex-1 bg-white dark:bg-stone-900 p-8 rounded-[2.5rem] border border-stone-200 dark:border-stone-800 shadow-sm min-h-[500px] flex flex-col">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-2 text-stone-400 dark:text-stone-500">
-                <BarChart3 className="w-4 h-4" />
+                <BarChart3 className="w-4 h-4" aria-hidden="true" />
                 <h3 className="text-xs font-black uppercase tracking-widest">PMF Visualization</h3>
               </div>
             </div>
-            <div className="flex-1">
+            <div className="flex-1" role="img" aria-label={`Bar chart showing the Binomial probability mass function with ${n} trials and probability ${p}`}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} className="dark:opacity-10" />

@@ -24,26 +24,29 @@ export function DistributionIdentifier({ onSelect }: { onSelect: (dist: string) 
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
+      role="region"
+      aria-label={title}
       className="space-y-6"
     >
       <div className="space-y-2">
         <h3 className="text-2xl font-bold text-stone-800 dark:text-white tracking-tight">{title}</h3>
         {description && <p className="text-stone-500 dark:text-stone-400">{description}</p>}
       </div>
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-4" role="group" aria-label={`Options for: ${title}`}>
         {options.map((opt, i) => (
           <motion.button
             key={i}
             whileHover={{ scale: 1.02, x: 8 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => handleAnswer(`q${step}`, opt.label, opt.next)}
+            aria-label={`${opt.label}: ${opt.sub}`}
             className="group text-left p-6 rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-indigo-500 dark:hover:border-indigo-500 hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 flex items-center justify-between"
           >
             <div>
               <div className="font-bold text-stone-800 dark:text-stone-200 text-lg">{opt.label}</div>
               <div className="text-sm text-stone-500 dark:text-stone-500 mt-1">{opt.sub}</div>
             </div>
-            <ArrowRight className="w-5 h-5 text-stone-300 group-hover:text-indigo-500 transition-colors" />
+            <ArrowRight className="w-5 h-5 text-stone-300 group-hover:text-indigo-500 transition-colors" aria-hidden="true" />
           </motion.button>
         ))}
       </div>
@@ -56,19 +59,20 @@ export function DistributionIdentifier({ onSelect }: { onSelect: (dist: string) 
         <h2 className="text-4xl font-black text-stone-900 dark:text-white tracking-tighter mb-4">
           Distribution Identifier
         </h2>
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2" role="progressbar" aria-label="Question progress" aria-valuenow={[0,1,2,4].indexOf(step) + 1} aria-valuemin={1} aria-valuemax={4}>
           {[0, 1, 2, 4].map((s, i) => (
-            <div 
-              key={s} 
+            <div
+              key={s}
+              aria-hidden="true"
               className={`h-1.5 rounded-full transition-all duration-500 ${
                 step === s ? "w-8 bg-indigo-500" : i < [0, 1, 2, 4].indexOf(step) ? "w-4 bg-indigo-200 dark:bg-indigo-900" : "w-4 bg-stone-200 dark:bg-stone-800"
-              }`} 
+              }`}
             />
           ))}
         </div>
       </div>
 
-      <div className="relative min-h-[400px]">
+      <div className="relative min-h-[400px]" aria-live="polite" aria-atomic="true">
         <AnimatePresence mode="wait">
           {step === 0 && (
             <QuestionCard 
@@ -114,14 +118,15 @@ export function DistributionIdentifier({ onSelect }: { onSelect: (dist: string) 
               <p className="text-lg opacity-80 leading-relaxed">
                 Used for counting the number of occurrences of an event over a given interval of time or space.
               </p>
-              <motion.button 
+              <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => onSelect('poisson')} 
+                onClick={() => onSelect('poisson')}
+                aria-label="Navigate to the Poisson Distribution Calculator"
                 className="mt-8 px-8 py-4 bg-emerald-600 text-white rounded-2xl font-bold text-lg shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition-colors flex items-center gap-2"
               >
                 Go to Poisson Calculator
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-5 h-5" aria-hidden="true" />
               </motion.button>
             </motion.div>
           )}
@@ -139,13 +144,14 @@ export function DistributionIdentifier({ onSelect }: { onSelect: (dist: string) 
       </div>
 
       {step > 0 && step !== 3 && (
-        <motion.button 
+        <motion.button
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          onClick={reset} 
+          onClick={reset}
+          aria-label="Start over from the beginning"
           className="mt-12 mx-auto flex items-center gap-2 text-sm text-stone-400 dark:text-stone-600 hover:text-stone-800 dark:hover:text-stone-300 font-bold uppercase tracking-widest transition-colors"
         >
-          <RotateCcw className="w-4 h-4" />
+          <RotateCcw className="w-4 h-4" aria-hidden="true" />
           Start Over
         </motion.button>
       )}
