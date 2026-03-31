@@ -18,3 +18,27 @@ View your app in AI Studio: https://ai.studio/apps/df11d9dd-9a77-4e23-a2bd-87c76
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+
+## Deploy
+
+This project is deployed on `calc.phifilms.co.za`.
+
+Server deploy path:
+
+- `/srv/projects/calc`
+
+Manual deploy on the server:
+
+```bash
+cd /srv/projects/calc
+git pull
+sudo docker compose up -d --build
+```
+
+GitHub Actions auto-deploy:
+
+- workflow file: `.github/workflows/deploy-calc.yml`
+- requires repository secrets:
+  - `DEPLOY_HOST`
+  - `DEPLOY_USER`
+  - `DEPLOY_SSH_KEY`

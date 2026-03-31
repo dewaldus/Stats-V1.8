@@ -1,0 +1,7 @@
+services:
+  calc:
+    build: .
+    container_name: calc-app
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3002:80"
